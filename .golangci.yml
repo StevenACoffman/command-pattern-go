@@ -1,0 +1,204 @@
+# All settings can be found here https://github.com/golangci/golangci-lint/blob/HEAD/.golangci.reference.yml
+version: "2"
+run:
+  concurrency: 8
+  modules-download-mode: readonly
+  issues-exit-code: 1
+  tests: true
+  allow-parallel-runners: false
+
+# Custom analyzers - see pkg/analyzers/repowrite for the repo write enforcement linter
+# Run separately with: go run ./pkg/analyzers/repowrite/cmd/repowrite ./...
+issues:
+  # Maximum count of issues with the same text.
+  # Set to 0 to disable.
+  # Default: 3
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
+formatters:
+  enable:
+    - golines
+    - gofumpt
+    - gci
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/Khan)
+    golines:
+      # Target maximum line length.
+      # Default: 100
+      max-len: 100
+      shorten-comments: true
+  exclusions:
+    paths:
+      - generated
+      - node_modules
+
+linters:
+  exclusions:
+    generated: disable
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - dupl
+          - errcheck
+        path: _test\.go
+    paths:
+      - generated
+      - third_party$
+      - builtin$
+      - examples$
+      - node_modules
+  default: none
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - durationcheck
+    - errcheck
+    - gocritic
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - perfsprint
+    - predeclared
+    - reassign
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - testableexamples
+    - testifylint
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+  settings:
+    errcheck:
+      exclude-functions:
+        - (io.Writer).Write
+        - (http.ResponseWriter).Write
+        - (*bytes.Buffer).WriteByte
+        - (*strings.Builder).WriteByte
+        - (*strings.Builder).WriteString
+        - io.Copy
+        - io.WriteString
+        - fmt.Fprintln
+    gocritic:
+      disabled-checks:
+        - appendAssign
+        - builtinShadow
+        - commentedOutCode
+        - paramTypeCombine
+        - sprintfQuotedString
+        - unnamedResult
+        - assignOp
+        - filepathJoin
+        - sloppyReassign
+        - singleCaseSwitch
+        - typeDefFirst
+        - exitAfterDefer
+        - rangeValCopy
+      enabled-tags:
+        - diagnostic
+        - performance
+        - style
+      settings:
+        captLocal:
+          paramsOnly: true
+    govet:
+      enable:
+        - appends
+        - asmdecl
+        - assign
+        - atomic
+        - atomicalign
+        - bools
+        - buildtag
+        - cgocall
+        - composites
+        - copylocks
+        - deepequalerrors
+        - defers
+        - directive
+        - errorsas
+        - findcall
+        - framepointer
+        - httpresponse
+        - ifaceassert
+        - loopclosure
+        - lostcancel
+        - nilfunc
+        - nilness
+        - printf
+        - reflectvaluecompare
+        - shift
+        - sigchanyzer
+        - slog
+        - sortslice
+        - stdmethods
+        - stringintconv
+        - structtag
+        - testinggoroutine
+        - tests
+        - unmarshal
+        - unreachable
+        - unsafeptr
+        - unusedresult
+        - unusedwrite
+      disable:
+        - fieldalignment
+        - shadow
+    perfsprint:
+      int-conversion: false
+      err-error: false
+      errorf: true
+      sprintf1: false
+      strconcat: false
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: use-any
+        - name: struct-tag
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: error-return
+        - name: error-naming
+        - name: exported
+          disabled: true
+        - name: if-return
+        - name: var-declaration
+        - name: package-comments
+          disabled: true
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: superfluous-else
+        - name: unused-parameter
+          disabled: true
+        - name: unreachable-code
+        - name: redefines-builtin-id
+    testifylint:
+      enable-all: true
+      disable:
+        - nil-compare
+        - require-error
+        - useless-assert
+      suite-extra-assert-call:
+        mode: require
