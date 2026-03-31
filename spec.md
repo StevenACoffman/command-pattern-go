@@ -3,7 +3,7 @@
 ## Overview
 
 This project implements a CLI dispatcher using the idiomatic Go command pattern,
-modeled after the Go toolchain's own `cmd/go` implementation. Do not use
+modeled after the Go toolchain's own `cmd/go` implementation from [this file](https://github.com/golang/go/blob/master/src/cmd/go/internal/base/base.go). Do not use
 third-party CLI frameworks (cobra, urfave/cli, etc.). Do not use interfaces for
 command polymorphism. Use the `Command` struct with function pointers.
 
